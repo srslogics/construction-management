@@ -3,7 +3,7 @@ import "./globals.css";
 import { ServiceWorkerRegistration } from "./components/ServiceWorkerRegistration";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://construction-management-izrm.onrender.com"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://construction-management-6vja.onrender.com"),
   title: "BuildCore",
   description: "Manage construction projects, workforce, materials, expenses and site reporting from one command center.",
   icons: {
