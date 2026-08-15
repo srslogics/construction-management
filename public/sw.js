@@ -1,5 +1,5 @@
-const CACHE = "buildcore-v1";
-const APP_SHELL = ["/", "/manifest.webmanifest", "/favicon.svg"];
+const CACHE = "buildcore-v2";
+const APP_SHELL = ["/", "/manifest.webmanifest", "/buildcore-favicon.svg", "/buildcore-preview.png"];
 self.addEventListener("install", (event) => event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(APP_SHELL))));
 self.addEventListener("activate", (event) => event.waitUntil(caches.keys().then((keys) => Promise.all(keys.filter((key) => key !== CACHE).map((key) => caches.delete(key))))));
 self.addEventListener("fetch", (event) => {
