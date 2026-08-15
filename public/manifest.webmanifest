@@ -1,0 +1,13 @@
+{
+  "name": "BuildCore — Site Command Center",
+  "short_name": "BuildCore",
+  "description": "Construction operations, projects, workforce, materials and reporting in one command center.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f3f5f3",
+  "theme_color": "#176b4d",
+  "orientation": "any",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
