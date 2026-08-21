@@ -30,17 +30,19 @@ test("server-renders the owner command centre", async () => {
 });
 
 test("keeps the distributed demo credible and owner-ready", async () => {
-  const [layout, page, moduleView, serviceWorker, packageJson, nodeVersion] = await Promise.all([
+  const [layout, page, moduleView, serviceWorker, packageJson, nodeVersion, styles, manifest] = await Promise.all([
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/components/ModuleView.tsx", import.meta.url), "utf8"),
     readFile(new URL("../public/sw.js", import.meta.url), "utf8"),
     readFile(new URL("../package.json", import.meta.url), "utf8"),
     readFile(new URL("../.node-version", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+    readFile(new URL("../public/manifest.webmanifest", import.meta.url), "utf8"),
   ]);
 
-  assert.match(layout, /buildcore-preview-no-phase\.jpg/);
-  assert.doesNotMatch(layout, /buildcore-preview\.png/);
+  assert.match(layout, /buildcore-preview-premium\.png/);
+  assert.doesNotMatch(layout, /buildcore-preview-no-phase\.jpg/);
   assert.match(page, /Owner tour/);
   assert.match(page, /selectedProject=\{selectedProject\}/);
   assert.match(page, /aria-live="polite"/);
@@ -53,4 +55,6 @@ test("keeps the distributed demo credible and owner-ready", async () => {
   assert.doesNotMatch(serviceWorker, /cached \|\| caches\.match\("\/"\)/);
   assert.equal(JSON.parse(packageJson).engines.node, "22.x");
   assert.equal(nodeVersion.trim(), "22.22.0");
+  assert.match(styles, /Premium midnight, sapphire and bronze theme/);
+  assert.equal(JSON.parse(manifest).theme_color, "#0b1728");
 });

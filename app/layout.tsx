@@ -19,11 +19,11 @@ export const metadata: Metadata = {
     locale: "en_IN",
     url: "/",
     siteName: "BuildCore",
-    title: "BuildCore — Construction Management",
-    description: "Projects, workforce, materials and site reporting under complete control.",
+    title: "BuildCore — Owner Command Centre",
+    description: "Construction progress, money, materials and owner decisions in one command centre.",
     images: [
       {
-        url: "/buildcore-preview-no-phase.jpg",
+        url: "/buildcore-preview-premium.png",
         width: 1200,
         height: 630,
         alt: "BuildCore construction management command center",
@@ -32,13 +32,13 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "BuildCore — Construction Management",
-    description: "Projects, workforce, materials and site reporting under complete control.",
-    images: ["/buildcore-preview-no-phase.jpg"],
+    title: "BuildCore — Owner Command Centre",
+    description: "Construction progress, money, materials and owner decisions in one command centre.",
+    images: ["/buildcore-preview-premium.png"],
   },
 };
 
-export const viewport = { width: "device-width", initialScale: 1, themeColor: "#176b4d" };
+export const viewport = { width: "device-width", initialScale: 1, themeColor: "#0b1728" };
 
 export default function RootLayout({
   children,
