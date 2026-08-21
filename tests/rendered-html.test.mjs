@@ -51,10 +51,17 @@ test("keeps the distributed demo credible and owner-ready", async () => {
   assert.match(moduleView, /mobile-primary-action/);
   assert.match(moduleView, /type="file"/);
   assert.match(moduleView, /optionSets/);
-  assert.match(serviceWorker, /event\.request\.mode === "navigate"/);
+  assert.match(serviceWorker, /event\.request\.mode !== "navigate"/);
   assert.doesNotMatch(serviceWorker, /cached \|\| caches\.match\("\/"\)/);
+  assert.doesNotMatch(serviceWorker, /cache\.put\(event\.request/);
+  assert.match(serviceWorker, /self\.skipWaiting\(\)/);
+  assert.match(serviceWorker, /self\.clients\.claim\(\)/);
   assert.equal(JSON.parse(packageJson).engines.node, "22.x");
   assert.equal(nodeVersion.trim(), "22.22.0");
+  assert.match(styles, /\.app\{display:flex;min-height:100vh/);
+  assert.match(styles, /\.sidebar\{width:252px;position:fixed/);
+  assert.match(styles, /\.main-panel\{margin-left:252px/);
+  assert.match(styles, /\.topbar\{height:68px;background:var\(--card\)/);
   assert.match(styles, /Premium midnight, sapphire and bronze theme/);
   assert.equal(JSON.parse(manifest).theme_color, "#0b1728");
 });
