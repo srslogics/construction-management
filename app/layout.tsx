@@ -23,9 +23,10 @@ export const metadata: Metadata = {
     description: "Construction progress, money, materials and owner decisions in one command centre.",
     images: [
       {
-        url: "/buildcore-preview-premium.png",
+        url: "/buildcore-whatsapp-preview-v2.jpg",
         width: 1200,
         height: 630,
+        type: "image/jpeg",
         alt: "BuildCore construction management command center",
       },
     ],
@@ -34,7 +35,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "BuildCore — Owner Command Centre",
     description: "Construction progress, money, materials and owner decisions in one command centre.",
-    images: ["/buildcore-preview-premium.png"],
+    images: ["/buildcore-whatsapp-preview-v2.jpg"],
   },
 };
 

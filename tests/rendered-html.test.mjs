@@ -26,6 +26,7 @@ test("server-renders the owner command centre", async () => {
   assert.match(html, /What needs you now\?/i);
   assert.match(html, /Review approvals/i);
   assert.match(html, /Aarambh Developers/i);
+  assert.match(html, /buildcore-whatsapp-preview-v2\.jpg/i);
   assert.doesNotMatch(html, /Phase 1/i);
 });
 
@@ -41,8 +42,9 @@ test("keeps the distributed demo credible and owner-ready", async () => {
     readFile(new URL("../public/manifest.webmanifest", import.meta.url), "utf8"),
   ]);
 
-  assert.match(layout, /buildcore-preview-premium\.png/);
-  assert.doesNotMatch(layout, /buildcore-preview-no-phase\.jpg/);
+  assert.match(layout, /buildcore-whatsapp-preview-v2\.jpg/);
+  assert.match(layout, /type: "image\/jpeg"/);
+  assert.doesNotMatch(layout, /buildcore-preview-(?:premium\.png|no-phase\.jpg)/);
   assert.match(page, /Owner tour/);
   assert.match(page, /selectedProject=\{selectedProject\}/);
   assert.match(page, /aria-live="polite"/);

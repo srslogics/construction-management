@@ -1,5 +1,5 @@
-const CACHE = "buildcore-v5";
-const APP_SHELL = ["/", "/manifest.webmanifest", "/buildcore-favicon.svg", "/buildcore-preview-premium.png"];
+const CACHE = "buildcore-v6";
+const APP_SHELL = ["/", "/manifest.webmanifest", "/buildcore-favicon.svg", "/buildcore-whatsapp-preview-v2.jpg"];
 self.addEventListener("install", (event) => event.waitUntil(
   caches.open(CACHE).then((cache) => cache.addAll(APP_SHELL)).then(() => self.skipWaiting()),
 ));
