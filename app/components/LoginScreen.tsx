@@ -21,8 +21,8 @@ export function LoginScreen({ onSignIn }: { onSignIn: () => void }) {
           <div className="mobile-login-brand"><span>▲</span><strong>BuildCore</strong></div>
           <p className="welcome-label">WELCOME BACK</p>
           <h2>Sign in to your workspace</h2>
-          <p>Enter your account details to continue to BuildCore.</p>
-          <label><span>Work email</span><input type="email" defaultValue="ajit@buildcore.in" autoComplete="email" required /></label>
+          <p>Use the prepared owner account to explore the complete demo.</p>
+          <label><span>Work email</span><input type="email" defaultValue="owner@buildcore.demo" autoComplete="email" required /></label>
           <label><span>Password</span><div className="password-field"><input type={showPassword ? "text" : "password"} defaultValue="buildcore" autoComplete="current-password" required /><button type="button" onClick={() => setShowPassword(!showPassword)} aria-label={showPassword ? "Hide password" : "Show password"}>{showPassword ? "Hide" : "Show"}</button></div></label>
           <div className="login-options"><label><input type="checkbox" defaultChecked /> Keep me signed in</label><button type="button">Forgot password?</button></div>
           <button className="login-submit" type="submit">Sign in to BuildCore <span>→</span></button>

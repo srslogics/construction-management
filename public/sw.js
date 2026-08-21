@@ -1,12 +1,19 @@
-const CACHE = "buildcore-v2";
-const APP_SHELL = ["/", "/manifest.webmanifest", "/buildcore-favicon.svg", "/buildcore-preview.png"];
+const CACHE = "buildcore-v3";
+const APP_SHELL = ["/", "/manifest.webmanifest", "/buildcore-favicon.svg", "/buildcore-preview-no-phase.jpg"];
 self.addEventListener("install", (event) => event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(APP_SHELL))));
 self.addEventListener("activate", (event) => event.waitUntil(caches.keys().then((keys) => Promise.all(keys.filter((key) => key !== CACHE).map((key) => caches.delete(key))))));
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
   event.respondWith(fetch(event.request).then((response) => {
-    const copy = response.clone();
-    caches.open(CACHE).then((cache) => cache.put(event.request, copy));
+    if (response.ok && new URL(event.request.url).origin === self.location.origin) {
+      const copy = response.clone();
+      caches.open(CACHE).then((cache) => cache.put(event.request, copy));
+    }
     return response;
-  }).catch(() => caches.match(event.request).then((cached) => cached || caches.match("/"))));
+  }).catch(async () => {
+    const cached = await caches.match(event.request);
+    if (cached) return cached;
+    if (event.request.mode === "navigate") return caches.match("/");
+    return new Response("Offline", { status: 503, statusText: "Offline" });
+  }));
 });
