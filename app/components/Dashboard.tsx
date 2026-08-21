@@ -59,8 +59,26 @@ export function Dashboard({
       </div>
     </div>
 
+    <section className="owner-start" aria-labelledby="owner-start-title">
+      <div className="owner-start-copy">
+        <span className="start-label">START HERE</span>
+        <h2 id="owner-start-title">{decisionCount ? `${decisionCount} decisions need you today` : "Everything is under control"}</h2>
+        <p>{decisionCount ? `${summary.approval} is waiting for your review. Handle the urgent items first, then check today’s site update.` : "No urgent approval is waiting. You can review today’s site update when convenient."}</p>
+      </div>
+      <div className="owner-start-facts">
+        <div><span>Money waiting</span><strong>{summary.approval}</strong></div>
+        <div><span>Delayed sites</span><strong className={delayed ? "red-text" : "green-text"}>{selectedProject === "All projects" ? 1 : delayed}</strong></div>
+        <div><span>Daily reports</span><strong>{summary.dpr}</strong></div>
+      </div>
+      <div className="owner-start-actions">
+        <button className="btn primary" onClick={() => navigate("expenses")}>Review approvals <span>→</span></button>
+        <button className="btn secondary" onClick={() => navigate("tasks")}>See delayed work</button>
+        <button className="btn quiet" onClick={() => navigate("dpr")}>Open today’s update</button>
+      </div>
+    </section>
+
     <section className="portfolio-pulse" aria-label="Portfolio health summary">
-      <div className="pulse-title"><span className="pulse-ring"><i /></span><div><strong>Portfolio health</strong><small>Updated 8 minutes ago</small></div></div>
+      <div className="pulse-title"><span className="pulse-ring"><i /></span><div><strong>Overall status</strong><small>Updated 8 minutes ago</small></div></div>
       <div className="pulse-metric"><strong className="green-text">{selectedProject === "All projects" ? 6 : onTrack}</strong><span>On track</span></div>
       <div className="pulse-metric"><strong className="amber-text">{selectedProject === "All projects" ? 1 : atRisk}</strong><span>At risk</span></div>
       <div className="pulse-metric"><strong className="red-text">{selectedProject === "All projects" ? 1 : delayed}</strong><span>Delayed</span></div>
@@ -70,7 +88,7 @@ export function Dashboard({
     <section className="stats-grid owner-stats">
       <article className="stat-card"><div className="stat-icon blue"><AppIcon name="projects"/></div><div className="stat-label">Active project value <span>{selectedProject === "All projects" ? "8 sites" : "Selected site"}</span></div><strong>{summary.value}</strong><small>Contracted construction value</small></article>
       <article className="stat-card"><div className="stat-icon green"><AppIcon name="trend"/></div><div className="stat-label">Overall completion <span>Current</span></div><strong>{summary.completion}</strong><small>{summary.plan} planned as of today</small></article>
-      <article className="stat-card"><div className="stat-icon purple"><AppIcon name="expenses"/></div><div className="stat-label">Cost utilised <em>Approved</em></div><strong>{summary.spent}</strong><small>of {summary.budget} approved budget</small></article>
+      <article className="stat-card"><div className="stat-icon purple"><AppIcon name="expenses"/></div><div className="stat-label">Money used <em>Approved</em></div><strong>{summary.spent}</strong><small>of {summary.budget} approved budget</small></article>
       <article className="stat-card priority-stat"><div className="stat-icon amber"><AppIcon name="warning"/></div><div className="stat-label">Awaiting your approval <em>{summary.items}</em></div><strong>{summary.approval}</strong><button onClick={() => navigate("expenses")}>Open approvals →</button></article>
     </section>
 
@@ -88,13 +106,13 @@ export function Dashboard({
       </article>
 
       <article className="card owner-actions-card">
-        <div className="card-head"><div><h2>Owner action centre</h2><p>Decisions waiting for you</p></div><span className="count">{decisionCount}</span></div>
+        <div className="card-head"><div><h2>What needs you now?</h2><p>Open an item, review the proof and decide</p></div><span className="count">{decisionCount}</span></div>
         <div className="owner-action-list">{visibleActions.length ? visibleActions.map((action) => <button key={action.title} onClick={() => navigate(action.module)}><span className={`action-mark ${action.tone}`}><AppIcon name={action.module === "expenses" ? "expenses" : action.module === "inventory" ? "inventory" : "warning"}/></span><p><strong>{action.title}</strong><small>{action.detail}</small></p><b>{action.value}</b><em>›</em></button>) : <div className="all-clear"><span>✓</span><p><strong>No decision pending</strong><small>Site operations are within the approved plan.</small></p></div>}</div>
         <button className="text-btn" onClick={() => navigate("reports")}>Prepare decision summary</button>
       </article>
 
       <article className="card money-card">
-        <div className="card-head"><div><h2>Cost and commitment</h2><p>Consolidated position across active sites</p></div><button onClick={() => navigate("reports")}>Cost report →</button></div>
+        <div className="card-head"><div><h2>Money position</h2><p>Paid, committed and still available</p></div><button onClick={() => navigate("reports")}>Cost report →</button></div>
         <div className="money-summary"><div><span>Approved budget</span><strong>₹25.1Cr</strong></div><div><span>Actual paid</span><strong>₹17.8Cr</strong></div><div><span>Committed</span><strong>₹3.6Cr</strong></div><div><span>Available</span><strong className="green-text">₹3.7Cr</strong></div></div>
         <div className="budget-bar"><i style={{width:"71%"}}/><i className="committed" style={{width:"14%"}}/></div>
         <div className="budget-legend"><span><i className="paid"/>Paid 71%</span><span><i className="committed"/>Committed 14%</span><span><i/>Available 15%</span></div>

@@ -22,7 +22,9 @@ test("server-renders the owner command centre", async () => {
   const html = await response.text();
   assert.match(html, /<title>BuildCore<\/title>/i);
   assert.match(html, /Your business, under control\./i);
-  assert.match(html, /Owner action centre/i);
+  assert.match(html, /decisions need you today/i);
+  assert.match(html, /What needs you now\?/i);
+  assert.match(html, /Review approvals/i);
   assert.match(html, /Aarambh Developers/i);
   assert.doesNotMatch(html, /Phase 1/i);
 });
@@ -39,7 +41,10 @@ test("keeps the distributed demo credible and owner-ready", async () => {
   assert.doesNotMatch(layout, /buildcore-preview\.png/);
   assert.match(page, /Owner tour/);
   assert.match(page, /selectedProject=\{selectedProject\}/);
+  assert.match(page, /aria-live="polite"/);
   assert.match(moduleView, /Expense approved and added to the audit trail/);
+  assert.match(moduleView, /START HERE/);
+  assert.match(moduleView, /mobile-primary-action/);
   assert.match(moduleView, /type="file"/);
   assert.match(moduleView, /optionSets/);
   assert.match(serviceWorker, /event\.request\.mode === "navigate"/);

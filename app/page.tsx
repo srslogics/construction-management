@@ -46,6 +46,9 @@ export default function Home() {
   const navigate = useCallback((key: ModuleKey) => {
     setActive(key);
     setMenuOpen(false);
+    setProfileOpen(false);
+    setProjectMenuOpen(false);
+    setNotificationsOpen(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
@@ -76,7 +79,7 @@ export default function Home() {
             <div className="nav-group" key={group.label}>
               <p>{group.label}</p>
               {group.items.map((item) => (
-                <button key={item.key} className={active === item.key ? "nav-item active" : "nav-item"} onClick={() => navigate(item.key)}>
+                <button key={item.key} className={active === item.key ? "nav-item active" : "nav-item"} onClick={() => navigate(item.key)} aria-current={active === item.key ? "page" : undefined}>
                   <AppIcon name={item.icon} /><span>{item.label}</span>
                   {item.badge && <em>{item.badge}</em>}
                 </button>
@@ -84,9 +87,9 @@ export default function Home() {
             </div>
           ))}
         </nav>
-        <div className="sidebar-help">
-          <span>?</span><div><strong>Need a hand?</strong><small>Visit the help center</small></div><b>›</b>
-        </div>
+        <button className="sidebar-help" onClick={() => { setMenuOpen(false); setTourOpen(true); }}>
+          <span>▶</span><div><strong>Not sure where to start?</strong><small>Take the 5-minute owner tour</small></div><b>›</b>
+        </button>
         <div className="version"><span /> Live demo workspace</div>
       </aside>
 
@@ -100,6 +103,7 @@ export default function Home() {
           </div>
           <div className="top-actions">
             <button className="search-pill" onClick={() => setSearchOpen(true)} aria-expanded={searchOpen}>⌕ <span>Search anything...</span><kbd>⌘ K</kbd></button>
+            <button className="icon-btn mobile-search-trigger" onClick={() => setSearchOpen(true)} aria-label="Search">⌕</button>
             <button className="icon-btn" onClick={() => setDark(!dark)} aria-label="Toggle theme">{dark ? "☀" : "◐"}</button>
             <button className="owner-tour-trigger" onClick={() => setTourOpen(true)}><span>▶</span> Owner tour</button>
             <div className="notification-wrap">
@@ -114,16 +118,16 @@ export default function Home() {
         </header>
 
         <div className="content">
-          {active === "dashboard" ? <Dashboard navigate={navigate} onStartTour={() => setTourOpen(true)} selectedProject={selectedProject} /> : <ModuleView key={active} module={current} notify={notify} selectedProject={selectedProject} />}
+          {active === "dashboard" ? <Dashboard navigate={navigate} onStartTour={() => setTourOpen(true)} selectedProject={selectedProject} /> : <ModuleView key={active} module={current} notify={notify} navigate={navigate} selectedProject={selectedProject} />}
         </div>
       </section>
       <nav className="mobile-nav" aria-label="Quick navigation">
         {(["dashboard", "projects", "expenses", "reports"] as ModuleKey[]).map((key) => (
-          <button key={key} className={active === key ? "active" : ""} onClick={() => navigate(key)}><AppIcon name={moduleData[key].icon} /><span>{moduleData[key].shortTitle || moduleData[key].title}</span></button>
+          <button key={key} className={active === key ? "active" : ""} onClick={() => navigate(key)} aria-current={active === key ? "page" : undefined}><AppIcon name={moduleData[key].icon} /><span>{moduleData[key].shortTitle || moduleData[key].title}</span></button>
         ))}
         <button onClick={() => setMenuOpen(true)}><AppIcon name="grid" /><span>More</span></button>
       </nav>
-      {toast && <div className="toast"><span>✓</span>{toast}</div>}
+      {toast && <div className="toast" role="status" aria-live="polite"><span>✓</span>{toast}</div>}
       {tourOpen && <><button className="tour-backdrop" onClick={() => setTourOpen(false)} aria-label="Close owner tour"/><DemoTour navigate={navigate} onClose={() => setTourOpen(false)} /></>}
       {searchOpen && <div className="command-backdrop"><button className="command-dismiss" onClick={() => setSearchOpen(false)} aria-label="Close search"/><section className="command-palette" role="dialog" aria-modal="true" aria-label="Search BuildCore">
         <div className="command-input"><span>⌕</span><input ref={searchInputRef} value={globalQuery} onChange={(event) => setGlobalQuery(event.target.value)} placeholder="Search modules, projects or tasks..." /><button onClick={() => setSearchOpen(false)}>ESC</button></div>
