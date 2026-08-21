@@ -1,46 +1,112 @@
 "use client";
+
 import { AppIcon } from "./Icon";
 import type { ModuleKey } from "../lib/data";
+
 const projects = [
-  {name:"Skyline Residences",place:"Bengaluru, Karnataka",progress:68,phase:"Structure",tone:"green"},
-  {name:"Metro Plaza Tower",place:"Hyderabad, Telangana",progress:42,phase:"Foundation",tone:"blue"},
-  {name:"Riverside Villas",place:"Kochi, Kerala",progress:81,phase:"Finishing",tone:"purple"},
-  {name:"Orchid Tech Park",place:"Noida, Uttar Pradesh",progress:26,phase:"Foundation",tone:"amber"},
+  { name: "Skyline Residences", place: "Bengaluru", progress: 68, plan: 70, spend: "₹8.4Cr", variance: "2 days ahead", status: "On track", tone: "green" },
+  { name: "Metro Plaza Tower", place: "Hyderabad", progress: 42, plan: 48, spend: "₹5.7Cr", variance: "6 days behind", status: "At risk", tone: "amber" },
+  { name: "Riverside Villas", place: "Kochi", progress: 81, plan: 79, spend: "₹3.1Cr", variance: "3 days ahead", status: "On track", tone: "green" },
+  { name: "Orchid Tech Park", place: "Noida", progress: 26, plan: 33, spend: "₹2.2Cr", variance: "9 days behind", status: "Delayed", tone: "red" },
 ];
-export function Dashboard({navigate,notify}:{navigate:(key:ModuleKey)=>void;notify:(m:string)=>void}) {
+
+const ownerActions: Array<{ title: string; detail: string; value: string; tone: string; module: ModuleKey }> = [
+  { title: "Approve site expenses", detail: "14 claims from four projects", value: "₹8.6L", tone: "amber", module: "expenses" },
+  { title: "Review variation request", detail: "Metro Plaza · electrical scope", value: "₹12.4L", tone: "blue", module: "projects" },
+  { title: "Resolve delayed milestone", detail: "Orchid Tech · footing package", value: "9 days", tone: "red", module: "tasks" },
+  { title: "Approve priority reorder", detail: "TMT steel · Metro Plaza", value: "₹3.2L", tone: "purple", module: "inventory" },
+];
+
+const projectSummaries: Record<string, { value: string; completion: string; plan: string; spent: string; budget: string; approval: string; items: string; workforce: string; dpr: string }> = {
+  "All projects": { value: "₹48.2Cr", completion: "62%", plan: "60%", spent: "₹19.4Cr", budget: "₹25.1Cr", approval: "₹8.6L", items: "14 items", workforce: "594", dpr: "6 / 8" },
+  "Skyline Residences": { value: "₹14.6Cr", completion: "68%", plan: "70%", spent: "₹8.4Cr", budget: "₹10.2Cr", approval: "₹0", items: "0 items", workforce: "126", dpr: "Received" },
+  "Metro Plaza Tower": { value: "₹12.8Cr", completion: "42%", plan: "48%", spent: "₹5.7Cr", budget: "₹7.8Cr", approval: "₹5.6L", items: "4 items", workforce: "98", dpr: "Received" },
+  "Riverside Villas": { value: "₹9.2Cr", completion: "81%", plan: "79%", spent: "₹3.1Cr", budget: "₹4.2Cr", approval: "₹0", items: "0 items", workforce: "74", dpr: "Pending" },
+  "Orchid Tech Park": { value: "₹11.6Cr", completion: "26%", plan: "33%", spent: "₹2.2Cr", budget: "₹2.9Cr", approval: "₹40K", items: "7 items", workforce: "108", dpr: "Pending" },
+};
+
+function currentDate() {
+  return new Intl.DateTimeFormat("en-IN", { weekday: "long", day: "numeric", month: "long" }).format(new Date()).toUpperCase();
+}
+
+export function Dashboard({
+  navigate,
+  onStartTour,
+  selectedProject,
+}: {
+  navigate: (key: ModuleKey) => void;
+  onStartTour: () => void;
+  selectedProject: string;
+}) {
+  const summary = projectSummaries[selectedProject] ?? projectSummaries["All projects"];
+  const visibleProjects = selectedProject === "All projects" ? projects : projects.filter((project) => project.name === selectedProject);
+  const visibleActions = selectedProject === "All projects" ? ownerActions : ownerActions.filter((action) => action.detail.includes(selectedProject.split(" ")[0]));
+  const decisionCount = visibleActions.length;
+  const onTrack = visibleProjects.filter((project) => project.status === "On track").length;
+  const atRisk = visibleProjects.filter((project) => project.status === "At risk").length;
+  const delayed = visibleProjects.filter((project) => project.status === "Delayed").length;
   return <>
-    <div className="page-head">
-      <div><p className="eyebrow">SATURDAY, 15 AUGUST</p><h1>Good afternoon, Ajit <span>👋</span></h1><p>Here’s what’s happening across your sites today.</p></div>
-      <div className="head-actions"><button className="btn secondary" onClick={()=>notify("Latest site data synced")}>↻ Refresh data</button><button className="btn primary" onClick={()=>navigate("projects")}>＋ New project</button></div>
+    <div className="page-head owner-page-head">
+      <div>
+        <div className="owner-view-label"><span>●</span> OWNER VIEW <em>Demo data</em></div>
+        <p className="eyebrow">{currentDate()}</p>
+        <h1>Your business, under control.</h1>
+        <p>{selectedProject === "All projects" ? "The decisions and exceptions that need your attention across every active site." : `Executive position for ${selectedProject}.`}</p>
+      </div>
+      <div className="head-actions">
+        <button className="btn secondary tour-button" onClick={onStartTour}>▶ Start 5-minute tour</button>
+        <button className="btn primary" onClick={() => navigate("reports")}>View owner report →</button>
+      </div>
     </div>
-    <section className="stats-grid">
-      <article className="stat-card"><div className="stat-icon blue"><AppIcon name="projects"/></div><div className="stat-label">Active projects <span>↗ 12%</span></div><strong>8</strong><small>of 12 total projects</small></article>
-      <article className="stat-card"><div className="stat-icon green"><AppIcon name="people"/></div><div className="stat-label">Workforce on site <span>↗ 6.2%</span></div><strong>594</strong><small>across all sites today</small></article>
-      <article className="stat-card"><div className="stat-icon amber"><AppIcon name="tasks"/></div><div className="stat-label">Open tasks <em>8 due today</em></div><strong>47</strong><small>5 tasks are overdue</small></article>
-      <article className="stat-card"><div className="stat-icon purple"><AppIcon name="expenses"/></div><div className="stat-label">Monthly spend <span>72% budget</span></div><strong>₹1.24Cr</strong><small>of ₹1.72Cr allocated</small></article>
+
+    <section className="portfolio-pulse" aria-label="Portfolio health summary">
+      <div className="pulse-title"><span className="pulse-ring"><i /></span><div><strong>Portfolio health</strong><small>Updated 8 minutes ago</small></div></div>
+      <div className="pulse-metric"><strong className="green-text">{selectedProject === "All projects" ? 6 : onTrack}</strong><span>On track</span></div>
+      <div className="pulse-metric"><strong className="amber-text">{selectedProject === "All projects" ? 1 : atRisk}</strong><span>At risk</span></div>
+      <div className="pulse-metric"><strong className="red-text">{selectedProject === "All projects" ? 1 : delayed}</strong><span>Delayed</span></div>
+      <div className="pulse-note"><span>{decisionCount ? "!" : "✓"}</span><p><strong>{decisionCount ? `${decisionCount} owner decision${decisionCount === 1 ? "" : "s"} due` : "No owner decision pending"}</strong><small>{decisionCount ? `${summary.approval} awaiting review` : "Site team is operating within plan"}</small></p><button onClick={() => navigate(decisionCount ? "expenses" : "projects")}>{decisionCount ? "Review now" : "View site"}</button></div>
     </section>
-    <section className="dashboard-grid">
-      <article className="card project-overview">
-        <div className="card-head"><div><h2>Project overview</h2><p>Progress across active projects</p></div><button onClick={()=>navigate("projects")}>View all projects →</button></div>
-        <div className="project-list">{projects.map((p,i)=><button className="project-row" key={p.name} onClick={()=>navigate("projects")}><div className={`project-thumb thumb-${i+1}`}><span>{p.name.slice(0,1)}</span></div><div className="project-info"><strong>{p.name}</strong><small>⌖ {p.place}</small></div><div className="phase"><span className={`status ${p.tone}`}>{p.phase}</span></div><div className="progress-wrap"><div><span>Progress</span><b>{p.progress}%</b></div><div className="progress"><i style={{width:`${p.progress}%`}} /></div></div><div className="row-more">•••</div></button>)}</div>
+
+    <section className="stats-grid owner-stats">
+      <article className="stat-card"><div className="stat-icon blue"><AppIcon name="projects"/></div><div className="stat-label">Active project value <span>{selectedProject === "All projects" ? "8 sites" : "Selected site"}</span></div><strong>{summary.value}</strong><small>Contracted construction value</small></article>
+      <article className="stat-card"><div className="stat-icon green"><AppIcon name="trend"/></div><div className="stat-label">Overall completion <span>Current</span></div><strong>{summary.completion}</strong><small>{summary.plan} planned as of today</small></article>
+      <article className="stat-card"><div className="stat-icon purple"><AppIcon name="expenses"/></div><div className="stat-label">Cost utilised <em>Approved</em></div><strong>{summary.spent}</strong><small>of {summary.budget} approved budget</small></article>
+      <article className="stat-card priority-stat"><div className="stat-icon amber"><AppIcon name="warning"/></div><div className="stat-label">Awaiting your approval <em>{summary.items}</em></div><strong>{summary.approval}</strong><button onClick={() => navigate("expenses")}>Open approvals →</button></article>
+    </section>
+
+    <section className="owner-grid">
+      <article className="card portfolio-card">
+        <div className="card-head"><div><h2>Site performance</h2><p>{selectedProject === "All projects" ? "Four priority sites · actual progress against plan" : "Actual progress against plan, with schedule position"}</p></div><button onClick={() => navigate("projects")}>All projects →</button></div>
+        <div className="portfolio-table-head"><span>Project</span><span>Progress</span><span>Spend to date</span><span>Schedule</span><span>Status</span></div>
+        <div className="portfolio-projects">{visibleProjects.map((project, index) => <button key={project.name} onClick={() => navigate("projects")}>
+          <div className="project-name"><span className={`project-thumb thumb-${index + 1}`}>{project.name[0]}</span><p><strong>{project.name}</strong><small>{project.place}</small></p></div>
+          <div className="owner-progress"><p><strong>{project.progress}%</strong><span>Plan {project.plan}%</span></p><i><b className={project.progress < project.plan ? "behind" : ""} style={{ width: `${project.progress}%` }} /></i></div>
+          <strong className="spend-value">{project.spend}</strong>
+          <span className={project.variance.includes("behind") ? "variance behind" : "variance ahead"}>{project.variance}</span>
+          <span className={`status ${project.tone}`}>{project.status}</span>
+        </button>)}</div>
       </article>
-      <article className="card activity-card"><div className="card-head"><div><h2>Recent activity</h2><p>Latest updates from your team</p></div><button onClick={()=>notify("Activity marked as reviewed")}>•••</button></div>
-        <div className="timeline">
-          <div><span className="avatar blue">RK</span><p><strong>Rohit completed a task</strong><br/>Slab reinforcement inspection · Skyline<br/><small>12 min ago</small></p></div>
-          <div><span className="avatar green">MN</span><p><strong>Meera submitted a DPR</strong><br/>Metro Plaza Tower · 98 workforce<br/><small>38 min ago</small></p></div>
-          <div><span className="avatar amber">AV</span><p><strong>Material inward recorded</strong><br/>400 bags of OPC Cement · Skyline<br/><small>1 hr ago</small></p></div>
-          <div><span className="avatar purple">LI</span><p><strong>24 site photos added</strong><br/>Villa 08 waterproofing · Riverside<br/><small>2 hrs ago</small></p></div>
-        </div><button className="text-btn" onClick={()=>notify("All activity loaded")}>View all activity</button>
+
+      <article className="card owner-actions-card">
+        <div className="card-head"><div><h2>Owner action centre</h2><p>Decisions waiting for you</p></div><span className="count">{decisionCount}</span></div>
+        <div className="owner-action-list">{visibleActions.length ? visibleActions.map((action) => <button key={action.title} onClick={() => navigate(action.module)}><span className={`action-mark ${action.tone}`}><AppIcon name={action.module === "expenses" ? "expenses" : action.module === "inventory" ? "inventory" : "warning"}/></span><p><strong>{action.title}</strong><small>{action.detail}</small></p><b>{action.value}</b><em>›</em></button>) : <div className="all-clear"><span>✓</span><p><strong>No decision pending</strong><small>Site operations are within the approved plan.</small></p></div>}</div>
+        <button className="text-btn" onClick={() => navigate("reports")}>Prepare decision summary</button>
       </article>
-      <article className="card attention-card"><div className="card-head"><div><h2>Needs attention</h2><p>Issues requiring action</p></div><span className="count">5</span></div>
-        <button onClick={()=>navigate("tasks")}><span className="attention-icon red">!</span><div><strong>5 overdue tasks</strong><small>Oldest is 3 days overdue</small></div><b>›</b></button>
-        <button onClick={()=>navigate("inventory")}><span className="attention-icon amber">◇</span><div><strong>12 low-stock materials</strong><small>3 items are out of stock</small></div><b>›</b></button>
-        <button onClick={()=>navigate("dpr")}><span className="attention-icon blue">▤</span><div><strong>2 DPRs pending today</strong><small>Riverside & Orchid Tech Park</small></div><b>›</b></button>
+
+      <article className="card money-card">
+        <div className="card-head"><div><h2>Cost and commitment</h2><p>Consolidated position across active sites</p></div><button onClick={() => navigate("reports")}>Cost report →</button></div>
+        <div className="money-summary"><div><span>Approved budget</span><strong>₹25.1Cr</strong></div><div><span>Actual paid</span><strong>₹17.8Cr</strong></div><div><span>Committed</span><strong>₹3.6Cr</strong></div><div><span>Available</span><strong className="green-text">₹3.7Cr</strong></div></div>
+        <div className="budget-bar"><i style={{width:"71%"}}/><i className="committed" style={{width:"14%"}}/></div>
+        <div className="budget-legend"><span><i className="paid"/>Paid 71%</span><span><i className="committed"/>Committed 14%</span><span><i/>Available 15%</span></div>
+        <div className="forecast-note"><span>↗</span><p><strong>Forecast remains within approved budget</strong><small>Projected saving of ₹42L if current trend holds</small></p></div>
       </article>
-      <article className="card chart-card"><div className="card-head"><div><h2>Monthly progress</h2><p>Planned vs actual completion</p></div><select aria-label="Chart period"><option>Last 6 months</option></select></div>
-        <div className="chart-legend"><span><i className="planned"/>Planned</span><span><i className="actual"/>Actual</span></div>
-        <div className="chart"><div className="ylabels"><span>100%</span><span>75%</span><span>50%</span><span>25%</span><span>0%</span></div><div className="chart-bars">{[[42,38],[50,46],[58,55],[67,61],[75,68],[83,72]].map((b,i)=><div className="bar-set" key={i}><div><i style={{height:`${b[0]}%`}}/><i style={{height:`${b[1]}%`}}/></div><span>{["Mar","Apr","May","Jun","Jul","Aug"][i]}</span></div>)}</div></div>
+
+      <article className="card site-brief-card">
+        <div className="card-head"><div><h2>Today across sites</h2><p>Daily accountability at a glance</p></div><button onClick={() => navigate("dpr")}>Open DPRs →</button></div>
+        <div className="brief-metrics"><button onClick={() => navigate("attendance")}><AppIcon name="people"/><strong>{summary.workforce}</strong><span>Workforce present</span><small>Verified today</small></button><button onClick={() => navigate("dpr")}><AppIcon name="dpr"/><strong>{summary.dpr}</strong><span>DPR status</span><small>{selectedProject === "All projects" ? "2 pending" : "Latest submission"}</small></button><button onClick={() => navigate("inventory")}><AppIcon name="inventory"/><strong>{selectedProject === "All projects" ? "12" : selectedProject === "Metro Plaza Tower" ? "4" : "2"}</strong><span>Low-stock items</span><small>Reorder monitored</small></button><button onClick={() => navigate("photos")}><AppIcon name="photos"/><strong>{selectedProject === "All projects" ? "42" : "18"}</strong><span>Photos today</span><small>Timestamp verified</small></button></div>
       </article>
     </section>
-  </>
+
+    <p className="demo-disclaimer"><span>i</span>All figures shown are realistic sample data for demonstration. Your workspace will use your projects, approvals, roles and reporting structure.</p>
+  </>;
 }
