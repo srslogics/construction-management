@@ -18,7 +18,7 @@ All figures in the frontend are realistic sample data. No backend is connected y
 
 ## Run locally
 
-Use Node.js 22.13 or newer.
+Use Node.js 22.22.0. The repository pins this version so local and Render builds use the same runtime.
 
 ```bash
 npm install
