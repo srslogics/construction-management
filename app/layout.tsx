@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     description: "Projects, workforce, materials and site reporting under complete control.",
     images: [
       {
-        url: "/buildcore-preview.png",
+        url: "/buildcore-preview-no-phase.jpg",
         width: 1200,
         height: 630,
         alt: "BuildCore construction management command center",
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "BuildCore — Construction Management",
     description: "Projects, workforce, materials and site reporting under complete control.",
-    images: ["/buildcore-preview.png"],
+    images: ["/buildcore-preview-no-phase.jpg"],
   },
 };
 
