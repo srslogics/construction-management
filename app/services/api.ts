@@ -1,5 +1,5 @@
 /**
- * API boundary for Phase 2 integration.
+ * API boundary for future backend integration.
  * UI modules should call this service instead of addressing a backend directly.
  */
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "/api";
